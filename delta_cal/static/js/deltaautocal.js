@@ -43,7 +43,7 @@ $(function () {
         var newDeviation = 0.0;
 
         // dc42 code
-        var initialPoints = 16; // was 10; // Was 7.
+        var initialPoints = 17; // was 10; // Was 7.
         var initialFactors = 6; // Only 6 factor! 7 screws with the diagonal rod length 
                                 // and causes scaling errors -gwb 24Dec16
         var deltaParams;
@@ -370,6 +370,7 @@ $(function () {
           probe(bedRadius, 0, nperipoints, xoffset, yoffset);
           // ..then the inner points.
           probe(bedRadius/2, nperipoints, nhalfpoints, xoffset, yoffset);
+          probe(0,0,1,0,0); //Probe at X0 Y0. Maybe this'll work
           xBedProbePoints[ntotalpoints-1] = 0.0;
           yBedProbePoints[ntotalpoints-1] = 0.0;
           zBedProbePoints[ntotalpoints-1] = 0.0;
