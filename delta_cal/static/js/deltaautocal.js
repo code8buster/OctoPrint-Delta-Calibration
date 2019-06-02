@@ -370,10 +370,10 @@ $(function () {
           probe(bedRadius, 0, nperipoints, xoffset, yoffset);
           // ..then the inner points.
           probe(bedRadius/2, nperipoints, nhalfpoints, xoffset, yoffset);
-          probe(0,0,1,0,0); //Probe at X0 Y0. Maybe this'll work
-          xBedProbePoints[ntotalpoints-1] = 0.0;
-          yBedProbePoints[ntotalpoints-1] = 0.0;
-          zBedProbePoints[ntotalpoints-1] = 0.0;
+          probe(0,ntotalpoints,1,0,0); //Probe at X0 Y0
+          xBedProbePoints[ntotalpoints] = 0.0;
+          yBedProbePoints[ntotalpoints] = 0.0;
+          zBedProbePoints[ntotalpoints] = 0.0;
         
         }
 
