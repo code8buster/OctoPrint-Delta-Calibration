@@ -370,7 +370,7 @@ $(function () {
           probe(bedRadius, 0, nperipoints, xoffset, yoffset);
           // ..then the inner points.
           probe(bedRadius/2, nperipoints, nhalfpoints, xoffset, yoffset);
-          probe(0,ntotalpoints,1,0,0); //Probe at X0 Y0
+          probe(0,ntotalpoints-1,1,0,0); //Probe at X0 Y0
           xBedProbePoints[ntotalpoints] = 0.0;
           yBedProbePoints[ntotalpoints] = 0.0;
           zBedProbePoints[ntotalpoints] = 0.0;
@@ -550,9 +550,12 @@ $(function () {
           self.control.sendCustomCommand({ command: "G28" }); // home first!
           // build it all right now.
           var strCommandBuffer = [];
-
+	  var xProbePoint=0.0
+	  var yProbePoint=0.0
           for(var x = 0; x < numPoints; x++) {
-            strCommandBuffer.push("G0 X"  + xBedProbePoints[x] + " Y" + yBedProbePoints[x] + " Z" + DEFAULT_PROBE_HEIGHT + " F6500");
+	  xProbePoint = xBedProbePoints[x] + ZProbeXOffset;
+	  yProbePoint = yBedProbePoints[x] + ZProbeYOffset;
+            strCommandBuffer.push("G0 X"  + xBedProbePoint + " Y" + yBedProbePoint + " Z" + ZProbeHeight + " F7500");
             strCommandBuffer.push("G30");
           }
           self.control.sendCustomCommand({ commands: strCommandBuffer});
