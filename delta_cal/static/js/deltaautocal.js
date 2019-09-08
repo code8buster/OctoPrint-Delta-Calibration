@@ -44,7 +44,7 @@ $(function () {
 
         // dc42 code
         var initialPoints = 17; // was 10; // Was 7.
-        var initialFactors = 6; // Only 6 factor! 7 screws with the diagonal rod length 
+        var initialFactors = 6; // Only 6 factor! 7 screws with the diagonal rod length
                                 // and causes scaling errors -gwb 24Dec16
         var deltaParams;
         var firmware = "Repetier";
@@ -357,7 +357,7 @@ $(function () {
         }
 
         function calcProbePoints2() {
-          // new probe point generator, snatched straight from dc42's 
+          // new probe point generator, snatched straight from dc42's
           // bed probe point calculator, here: http://www.escher3d.com/pages/wizards/wizardbed.php
 
           var nperipoints = 10;
@@ -374,7 +374,7 @@ $(function () {
           xBedProbePoints[ntotalpoints] = 0.0;
           yBedProbePoints[ntotalpoints] = 0.0;
           zBedProbePoints[ntotalpoints] = 0.0;
-        
+
         }
 
         function calcProbePoints() {
@@ -545,17 +545,18 @@ $(function () {
           convertIncomingEndstops();
 
           // kick off the first probe!
-          self.probeCount = 0;
+                    self.probeCount = 0;
           self.probingActive = true;
           self.control.sendCustomCommand({ command: "G28" }); // home first!
           // build it all right now.
           var strCommandBuffer = [];
 	  var xProbePoint=0.0
 	  var yProbePoint=0.0
+	  var ZProbeHeight=DEFAULT_PROBE_HEIGHT
           for(var x = 0; x < numPoints; x++) {
-	  xProbePoint = xBedProbePoints[x] + ZProbeXOffset;
-	  yProbePoint = yBedProbePoints[x] + ZProbeYOffset;
-            strCommandBuffer.push("G0 X"  + xBedProbePoint + " Y" + yBedProbePoint + " Z" + ZProbeHeight + " F7500");
+	  xProbePoint = xBedProbePoints[x] ;
+	  yProbePoint = yBedProbePoints[x] ;
+            strCommandBuffer.push("G0 X"  + xProbePoint + " Y" + yProbePoint + " Z" + ZProbeHeight + " F7500");
             strCommandBuffer.push("G30");
           }
           self.control.sendCustomCommand({ commands: strCommandBuffer});
@@ -740,7 +741,7 @@ $(function () {
           });
         };
 
-        self.fromCurrentData = function (data) {
+                self.fromCurrentData = function (data) {
           if (!self.isRepetierFirmware()) {
             _.each(data.logs, function (line) {
               var match = self.firmwareRegEx.exec(line);
@@ -748,13 +749,13 @@ $(function () {
                 console.log("Firmware: " + line);
                 if (self.repetierRegEx.exec(match[0])) {
                   self.isRepetierFirmware(true);
-                  self.isSeeMeCNCPrinter(false); //.. unless otherwise!
+                  self.isSeeMeCNCPrinter(true); //.. unless otherwise!
                   if (line.includes("ORION Delta")) {
                     self.machineType = SMC_ORION;
                     self.isSeeMeCNCPrinter(true);
                     self.printerType("Orion Delta")
                   }
-                  if (line.includes("Rostock Max v2") || 
+                  if (line.includes("Repetier") ||
 			line.includes("White Max v2.75")) {
                     self.machineType = SMC_MAX_V2;
                     self.isSeeMeCNCPrinter(true);
@@ -775,6 +776,7 @@ $(function () {
                     self.isSeeMeCNCPrinter(true);
                     self.printerType("Hacker H2");
                   }
+                    self.isSeeMeCNCPrinter(true);
 
                   console.log("Printer " + self.printerType());
                 }
@@ -805,25 +807,25 @@ $(function () {
               }
               if (self.probingActive && (line.includes("PROBE-ZOFFSET") || line.includes("Z-probe"))) {
 		switch(line.includes("Z-probe")) {
-		    case "true" :
+		    case true :
                            var zCoord = line.split(":");
                            self.statusMessage(self.statusMessage() + ".");
-                           console.log(" Probe #" + parseInt(self.probeCount + 1) + " value: " + ((-1*DEFAULT_PROBE_HEIGHT)+parseFloat(zCoord[2])) + 
-			   " X: " + parseFloat(xBedProbePoints[self.probeCount]) + 
+                           console.log(" Probe #" + parseInt(self.probeCount + 1) + " value: " + ((-1*DEFAULT_PROBE_HEIGHT)+parseFloat(zCoord[2])) +
+			   " X: " + parseFloat(xBedProbePoints[self.probeCount]) +
 			   " Y: " + parseFloat(yBedProbePoints[self.probeCount]));
                            zBedProbePoints[self.probeCount] = -parseFloat(zCoord[2]) + DEFAULT_PROBE_HEIGHT;
                         break;
-		    case "false" : 
+		    case false :
                 	   var zCoord = line.split(":");
                 	   self.statusMessage(self.statusMessage() + ".");
                 	   console.log(" Probe #" + parseInt(self.probeCount + 1) + " value: " + parseFloat(zCoord[2]) +
                 	   " X: " + parseFloat(xBedProbePoints[self.probeCount]) +
-                	   " Y: " + parseFloat(yBedProbePoints[self.probeCount]));                
+                	   " Y: " + parseFloat(yBedProbePoints[self.probeCount]));
                 	   zBedProbePoints[self.probeCount] = -parseFloat(zCoord[2]);
 			break;
 		   }
                 self.probeCount++;
-                if (self.probeCount === numPoints)  { 
+                if (self.probeCount === numPoints)  {
                   startDeltaCalcEngine();  // doooo eeeeeeet!
                 }
               }
@@ -847,7 +849,7 @@ $(function () {
         // function requestEepromData() {
         //   self.control.sendCustomCommand({ command: "M205" });
         // }
-        
+
         self.saveEEPROMData = function (data_type, position, value) {
           var cmd = "M206 T" + data_type + " P" + position;
           if (data_type == 3) {
