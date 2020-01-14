@@ -21,19 +21,15 @@ Pretty much the only thing left is the routines used to read/write the EEPROM. :
 
 To use this plugin, you can install it using pip from a shell prompt:
 
-    pip install https://github.com/geneb/OctoPrint-Delta-Calibration/archive/master.zip
+    pip install https://github.com/code8buster/OctoPrint-Delta-Calibration/archive/master.zip
 
 If you're working with an OctoPi distribution, you can sign into the "pi" account and
 install the plugin this way:
 
-    /home/pi/oprint/bin/pip install https://github.com/geneb/OctoPrint-Delta-Calibration/archive/master.zip
+    /home/pi/oprint/bin/pip install https://github.com/code8buster/OctoPrint-Delta-Calibration/archive/master.zip
 
-You must also be running a version of Repetier Firmware from SeeMeCNC with a firmware date of
-20161209 or later.  (Issue an M115 to see the firmware date, ex.:
-FIRMWARE_NAME:Repetier_0.92.2 FIRMWARE_DATE:20161209 MACHINE_TYPE:Rostock MAX v3)
-
-Before running this utility on your printer, you should issue a G29 command via the OctoPrint
-terminal.  This will kick off the internal calibration and will get the Z height properly set.
+You must also be running a version of Repetier 0.92 or later.  (Issue an M115 to see the firmware date, ex.:
+Your max Z height should be pre-set and roughly within 5mm of true.
 
 In order to use the plugin, click on the Settings link in OctoPrint and then click on the
 "Delta Autocalibration" link that's listed in the Plugins pane on the lower left.
@@ -41,11 +37,5 @@ In order to use the plugin, click on the Settings link in OctoPrint and then cli
 Click the Load EEPROM button and then click the Begin Delta Calibration button.
 
 You may run it as many times as you like, but you MUST click the Load EEPROM button before you begin
-the calibration sequence!  If you fail to do this, the calibration routine will NOT know what the current
-parameters are and you'll get poor, bad, or moderately catastrophic results.
+the calibration sequence!  If you fail to do this, the calibration routine will NOT know what the current parameters are and you'll get poor, bad, or moderately catastrophic results.
 
-[07Feb18]
-I've updated the plugin so that it checks 16 points (10 outer, 6 inner) instead of the usual 10.  This 
-appears to result in a better calibration, at least with the machines I've tested on.
-
-Enjoy!
